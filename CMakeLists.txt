@@ -18,6 +18,9 @@ MACRO_ENSURE_OUT_OF_SOURCE_BUILD(
 # set the project name and version
 project(Platformer VERSION 1.0)
 
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
+
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -33,6 +36,8 @@ find_package(Catch2 REQUIRED)
 set(SRC_FILES "src/guy.cpp")
 set(TEST_FILES "tests/catch_main.cpp" "tests/test_guy.cpp")
 
+set(WINDOW_FILES "src/window.cpp")
+
 #set(HEADER_FILES platformer.hpp)
 # Build code
 #add_executable(platformer "platformer.cpp" ${HEADER_FILES})
@@ -41,6 +46,9 @@ set(TEST_FILES "tests/catch_main.cpp" "tests/test_guy.cpp")
 # Build catch2 test
 add_executable(test_guy ${SRC_FILES} ${TEST_FILES})
 target_link_libraries(test_guy Catch2::Catch2)
+
+add_executable(platformer "src/main.cpp" ${WINDOW_FILES})
+target_link_libraries(platformer ${SDL2_LIBRARIES})
 
 # Will add targets for running tests, valgrind, etc.
 #option(PARSE_CATCH_TESTS_VERBOSE ON)
