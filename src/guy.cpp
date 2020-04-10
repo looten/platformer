@@ -1,4 +1,4 @@
-#include "platformer.hpp"
+#include "guy.hpp"
 #include <iostream>
 
 guy::guy(int x, int y) : _x_cord(x), _y_cord(y) {

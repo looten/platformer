@@ -1,5 +1,5 @@
-#ifndef SRC_PLATFORMER_H_
-#define SRC_PLATFORMER_H_
+#ifndef SRC_GUY_H_
+#define SRC_GUY_H_
 
 class guy {
  public:
@@ -15,4 +15,4 @@ class guy {
     int _y_cord;
 };
 
-#endif  // SRC_PLATFORMER_H_
+#endif  // SRC_GUY_H_

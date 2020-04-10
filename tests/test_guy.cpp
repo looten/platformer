@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include "../src/platformer.hpp"
+#include "../src/guy.hpp"
 
 TEST_CASE("Create character") {
   int x = 0;
