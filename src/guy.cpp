@@ -1,13 +1,12 @@
-#include "guy.hpp"
 #include <iostream>
 
-guy::guy(int x, int y) : _x_cord(x), _y_cord(y) {
+#include "guy_manager.hpp"
+#include "guy.hpp"
+
+guy::guy(int x_cord, int y_cord) : _x_cord(x_cord),
+                                   _y_cord(y_cord),
+                                   _x_velo(guy_movement::STILL),
+                                   _y_velo(guy_movement::STILL) {
   std::cout << __func__ << " created guy at (x,y): (" << get_x_cord() << "," << get_y_cord()
             << ")"<< std::endl;
 }
-
-/*int main() {
-  guy main_guy;
-  std::cout << " platformer_main: " << main_guy.add_5(0) << std::endl;
-  return 0;
-}*/

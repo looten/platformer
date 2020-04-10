@@ -4,9 +4,11 @@
 // Using SDL and standard IO
 #include <SDL.h>
 
+#include "guy_manager.hpp"
+
 class window {
  public:
-    window();
+    window(guy_manager gm);
     ~window();
     bool init();
     void close();
@@ -24,6 +26,8 @@ class window {
    SDL_Event _event;
 
    void handle_event();
+
+   guy_manager _gm;
 };
 
 #endif  // SRC_WINDOW_H_

@@ -6,9 +6,10 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
-window::window() : _window(NULL),
-                  _screen_surface(NULL),
-                  _quit(false) {
+window::window(guy_manager gm) : _window(NULL),
+                                _screen_surface(NULL),
+                                _quit(false),
+                                _gm(gm) {
   std::cout << __func__ << " constructor" << std::endl;
 }
 
@@ -59,32 +60,64 @@ void window::close() {
 }
 
 void window::handle_event() {
+  // guy my_guy = _gm.get_guy();
   switch (_event.type) {
     case SDL_QUIT:
       std::cerr << __func__ << " exit program" << std::endl;
       _quit = true;
       break;
-    case SDL_KEYUP:
-      std::cerr << __func__ << " key up event" << std::endl;
-      break;
     case SDL_KEYDOWN:
-      std::cerr << __func__ << " key down event" << std::endl;
+        switch (_event.key.keysym.sym) {
+          case SDLK_LEFT:
+            _gm.set_x_velo(guy_movement::GOING_LEFT);
+            break;
+          case SDLK_RIGHT:
+            _gm.set_x_velo(guy_movement::GOING_RIGHT);
+            break;
+          case SDLK_UP:
+            _gm.set_y_velo(guy_movement::GOING_UP);
+            break;
+          case SDLK_DOWN:
+            _gm.set_y_velo(guy_movement::GOING_DOWN);
+            break;
+          default:
+            break;
+        }
+        break;
+    case SDL_KEYUP:
+      switch (_event.key.keysym.sym) {
+        case SDLK_LEFT:
+          if (_gm.get_x_velo() < guy_movement::STILL)
+            _gm.set_x_velo(guy_movement::STILL);
+          break;
+        case SDLK_RIGHT:
+          if (_gm.get_x_velo() > guy_movement::STILL)
+            _gm.set_x_velo(guy_movement::STILL);
+          break;
+        case SDLK_UP:
+          if (_gm.get_y_velo() > guy_movement::STILL)
+            _gm.set_y_velo(guy_movement::STILL);
+          break;
+        case SDLK_DOWN:
+          if (_gm.get_y_velo() < guy_movement::STILL)
+            _gm.set_y_velo(guy_movement::STILL);
+          break;
+        default:
+          break;
+      }
       break;
-    case SDL_MOUSEBUTTONDOWN:
-      std::cerr << __func__ << " mouse down" << std::endl;
-      break;
-    case SDL_MOUSEBUTTONUP:
-      std::cerr << __func__ << " mouse up" << std::endl;
-      break;
-    /*default:
-      std::cerr << __func__ << " unknown event" << std::endl;
-      break;*/
   }
+
+  /* Update player position */
+  _gm.update_pos();
 }
 
 void window::loop() {
   while (!_quit) {
-    while (SDL_PollEvent(&_event) != 0)
+    while (SDL_PollEvent(&_event) != 0) {
       handle_event();
+    }
+    _gm.report_pos();
+    SDL_Delay(1000);
   }
 }

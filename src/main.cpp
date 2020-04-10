@@ -1,8 +1,10 @@
 #include <iostream>
 #include "window.hpp"
+#include "guy_manager.hpp"
 
 int main(int argc, char* args[]) {
-  window w;
+  guy_manager gm(0, 0);
+  window w(gm);
   if (w.init()) {
     w.loop();
   } else {
