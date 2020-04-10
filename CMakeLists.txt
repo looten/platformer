@@ -43,6 +43,10 @@ add_executable(test_platformer ${SRC_FILES} ${TEST_FILES})
 target_link_libraries(test_platformer Catch2::Catch2)
 
 # Will add targets for running tests, valgrind, etc.
+#option(PARSE_CATCH_TESTS_VERBOSE  ON)
 include(CTest)
-include(Catch)
-catch_discover_tests(test_platformer)
+#include(Catch)
+#catch_discover_tests(test_platformer)
+
+include(ParseAndAddCatchTests)
+ParseAndAddCatchTests(test_platformer)
