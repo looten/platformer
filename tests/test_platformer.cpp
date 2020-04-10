@@ -1,5 +1,5 @@
 #include <catch2/catch.hpp>
-#include "../platformer.hpp"
+#include "../src/platformer.hpp"
 
 TEST_CASE("Add 5 to num") {
   int a = 0;

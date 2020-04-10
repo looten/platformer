@@ -14,15 +14,16 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(Catch2 REQUIRED)
 
+set(SRC_FILES "src/platformer.cpp")
+set(TEST_FILES "tests/catch_main.cpp" "tests/test_platformer.cpp")
+
 #set(HEADER_FILES platformer.hpp)
 # Build code
 #add_executable(platformer "platformer.cpp" ${HEADER_FILES})
 #target_include_directories(platformer PRIVATE ".")
 
 # Build catch2 test
-add_executable(catch_main "tests/catch_main.cpp")
-add_executable(test_platformer  "platformer.cpp" "tests/catch_main.cpp" "tests/test_platformer.cpp")
-
+add_executable(test_platformer ${SRC_FILES} ${TEST_FILES})
 target_link_libraries(test_platformer Catch2::Catch2)
 
 # Will add targets for running tests, valgrind, etc.
