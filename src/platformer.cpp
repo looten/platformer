@@ -1,11 +1,10 @@
 #include "platformer.hpp"
 #include <iostream>
 
-guy::guy() {
-  std::cout << __func__ << " created guy " << std::endl;
+guy::guy(int x, int y) : _x_cord(x), _y_cord(y) {
+  std::cout << __func__ << " created guy at (x,y): (" << get_x_cord() << "," << get_y_cord()
+            << ")"<< std::endl;
 }
-
-int guy::add_5(int num) {return num + 5;}
 
 /*int main() {
   guy main_guy;
