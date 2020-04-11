@@ -7,7 +7,7 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 window::window(guy_manager gm) : _window(NULL),
-                                _screen_surface(NULL),
+                                _screen_texture(NULL),
                                 _quit(false),
                                 _gm(gm) {
   std::cout << __func__ << " constructor" << std::endl;
@@ -31,20 +31,16 @@ bool window::init() {
                               SDL_WINDOWPOS_UNDEFINED,
                               SCREEN_WIDTH, SCREEN_HEIGHT,
                               SDL_WINDOW_SHOWN);
-    if (_window == NULL) {
-      std::cerr << __func__ << "Window could not be created! SDL_Error:"
+    _guy_renderer = SDL_CreateRenderer(_window,
+                                       -1,
+                                       SDL_RENDERER_ACCELERATED |
+                                       SDL_RENDERER_TARGETTEXTURE);
+    if (_window == NULL || _guy_renderer == NULL) {
+      std::cerr << __func__ << "Window/rederer could not be created! SDL_Error:"
                 <<  SDL_GetError() << std::endl;
     } else {
-      // Get window surface
-      _screen_surface = SDL_GetWindowSurface(_window);
+      SDL_SetRenderDrawColor( _guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
 
-      // Fill the surface white
-      SDL_FillRect(_screen_surface,
-                   NULL,
-                   SDL_MapRGB(_screen_surface->format, 0xFF, 0xFF, 0xFF));
-
-      // Update the surface
-      SDL_UpdateWindowSurface(_window);
       success = true;
     }
   }
@@ -52,6 +48,12 @@ bool window::init() {
 }
 
 void window::close() {
+  SDL_DestroyTexture(_screen_texture);
+  SDL_DestroyTexture(_guy_texture);
+  SDL_DestroyRenderer(_guy_renderer);
+  // Deallocate guy
+  // SDL_FreeSurface(_guy_graphic);
+  //_guy_graphic = NULL;
   // Destroy window
   SDL_DestroyWindow(_window);
 
@@ -112,12 +114,84 @@ void window::handle_event() {
   _gm.update_pos();
 }
 
+bool window::load_guy() {
+  SDL_Texture* newTexture;
+  SDL_Surface* _guy_graphic = SDL_LoadBMP("graphics/guy_right.bmp");
+  if (_guy_graphic == NULL) {
+    std::cerr << "Unable to load image SDL_image Error \n";
+  } else {
+    // _screen_texture = SDL_CreateTexture(_guy_renderer, _guy_graphic);
+    newTexture = SDL_CreateTextureFromSurface(_guy_renderer, _guy_graphic);
+    if(newTexture == NULL) {
+      std::cerr << "Unable to create texture from %s! SDL Error: \n";
+    } else {
+      //Get image dimensions
+      mWidth = _guy_graphic -> w;
+      mHeight = _guy_graphic -> h;
+    }
+    SDL_FreeSurface(_guy_graphic);
+  }
+  _guy_texture = newTexture;
+}
+
+
+/*void::window::draw_guy() {
+  //Loading success flag
+bool success = true;
+  // Load splash image
+  if (_gm.set_x_velo() == guy_movement::GOING_LEFT) {
+
+  } else {
+
+  }
+
+  r.x = get_x_cord
+  r.y =rand()%500;
+
+  SDL_SetRenderTarget(renderer, texture);
+  SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
+  SDL_RenderClear(renderer);
+  SDL_RenderDrawRect(renderer,&r);
+  SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
+  SDL_RenderFillRect(renderer, &r);
+  SDL_SetRenderTarget(renderer, NULL);
+  SDL_RenderCopy(renderer, texture, NULL, NULL);
+  SDL_RenderPresent(renderer);
+
+
+  return success;
+}*/
+
+void window::render() {
+  //Set rendering space and render to screen
+	SDL_Rect renderQuad = { _gm.get_x_cord(), _gm.get_y_cord(), mWidth, mHeight };
+
+	//Set clip rendering dimensions
+	/*if( clip != NULL )
+	{
+		renderQuad.w = clip->w;
+		renderQuad.h = clip->h;
+	}*/
+
+	//Render to screen
+	SDL_RenderCopyEx(_guy_renderer, _guy_texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE );
+}
+
 void window::loop() {
   while (!_quit) {
     while (SDL_PollEvent(&_event) != 0) {
       handle_event();
     }
+
     _gm.report_pos();
-    SDL_Delay(1000);
+
+    //Clear screen
+    SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    SDL_RenderClear(_guy_renderer);
+
+    render();
+
+    SDL_RenderPresent(_guy_renderer);
+    // SDL_Delay(1000);
   }
 }

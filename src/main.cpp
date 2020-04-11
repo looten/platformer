@@ -5,7 +5,7 @@
 int main(int argc, char* args[]) {
   guy_manager gm(0, 0);
   window w(gm);
-  if (w.init()) {
+  if (w.init() && w.load_guy()) {
     w.loop();
   } else {
     std::cerr << __func__ << " failed to init window" << std::endl;

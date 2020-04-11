@@ -18,7 +18,12 @@ MACRO_ENSURE_OUT_OF_SOURCE_BUILD(
 # set the project name and version
 project(Platformer VERSION 1.0)
 
+
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/" ${SDL2_image_DIR})
+
 find_package(SDL2 REQUIRED)
+#find_package(SDL2_image REQUIRED)
+#include_directories(${SDL2_INCLUDE_DIRS} ${SDL2_IMAGE_INCLUDE_DIRS})
 include_directories(${SDL2_INCLUDE_DIRS})
 
 # specify the C++ standard
@@ -49,7 +54,7 @@ target_link_libraries(test_guy Catch2::Catch2)
 
 # Build platformer
 add_executable(platformer "src/main.cpp" ${SRC_FILES} ${WINDOW_FILES})
-target_link_libraries(platformer ${SDL2_LIBRARIES})
+target_link_libraries(platformer ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # Build guy and guy manager
 add_executable(guy "src/guy_main.cpp" ${SRC_FILES} )
