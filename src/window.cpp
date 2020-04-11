@@ -97,11 +97,11 @@ void window::handle_event() {
             _gm.set_x_velo(guy_movement::STILL);
           break;
         case SDLK_UP:
-          if (_gm.get_y_velo() > guy_movement::STILL)
+          if (_gm.get_y_velo() < guy_movement::STILL)
             _gm.set_y_velo(guy_movement::STILL);
           break;
         case SDLK_DOWN:
-          if (_gm.get_y_velo() < guy_movement::STILL)
+          if (_gm.get_y_velo() > guy_movement::STILL)
             _gm.set_y_velo(guy_movement::STILL);
           break;
         default:
@@ -109,7 +109,7 @@ void window::handle_event() {
       }
       break;
   }
-
+  // std::cout << "x_velo: " << _gm.get_x_velo() << " y_velo: " << _gm.get_y_velo()<< "\n";
   /* Update player position */
   _gm.update_pos();
 }
@@ -183,7 +183,7 @@ void window::loop() {
       handle_event();
     }
 
-    _gm.report_pos();
+    //_gm.report_pos();
 
     //Clear screen
     SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
