@@ -104,7 +104,6 @@ void window::handle_event() {
       std::cout << "x_velo: " << _gm.get_x_velo() << " y_velo: " << _gm.get_y_velo()<< "\n";
       break;
   }
-   _gm.load_guy(_renderer);
 }
 
 void window::clear_screen() {
@@ -115,7 +114,6 @@ void window::clear_screen() {
 
 void window::render() {
 	// Render to screen
-  //SDL_Rect  tmp = _gm.create_graphic(_gm.get_x_cord(), _gm.get_x_cord());
   SDL_Rect renderQuad = {_gm.get_x_cord(), _gm.get_y_cord(), _gm.get_width(), _gm.get_height()};
 	SDL_RenderCopyEx(_renderer, _gm.get_guy_texture(), NULL,
                    &renderQuad,

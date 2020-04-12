@@ -13,14 +13,16 @@ class guy_graphics {
    SDL_Rect create_graphic(const int &x, const int &y);
 
 
-   SDL_Texture* get_guy_texture(){ return _guy_texture; }
+   SDL_Texture* get_guy_texture();
    // Width and height
    int get_width() { return _width; }
    int get_height() { return _height; }
    void set_width(const int &w) { _width = w; }
    void set_height(const int &h) { _height = h; }
  private:
-   SDL_Texture* _guy_texture;
+   bool load(SDL_Renderer* renderer, SDL_Texture*& texture, const std::string &path);
+   SDL_Texture* _guy_texture_left;
+   SDL_Texture* _guy_texture_right;
    bool _load_left_graphics;
    int _width;
    int _height;
