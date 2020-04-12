@@ -14,28 +14,21 @@ class window {
     bool init();
     void close();
     void loop();
-    bool load_guy();
-    void render();
+
  private:
-   // The window we'll be rendering to
+   bool _quit;
+   int mWidth;
+   int mHeight;
    SDL_Window* _window;
-   // SDL_Surface* _guy_graphic;
    SDL_Renderer* _guy_renderer;
    SDL_Texture* _guy_texture;
-
-   // The surface contained by the window
-   SDL_Texture* _screen_texture;
-
-   bool _quit;
-
    // Event handler
    SDL_Event _event;
 
    void handle_event();
-   bool draw_guy();
-
-   int mWidth;
-   int mHeight;
+   bool load_guy();
+   void render();
+   void clear_screen();
 
    guy_manager _gm;
 };

@@ -7,7 +7,6 @@ const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
 window::window(guy_manager gm) : _window(NULL),
-                                _screen_texture(NULL),
                                 _quit(false),
                                 _gm(gm) {
   std::cout << __func__ << " constructor" << std::endl;
@@ -39,30 +38,23 @@ bool window::init() {
       std::cerr << __func__ << "Window/rederer could not be created! SDL_Error:"
                 <<  SDL_GetError() << std::endl;
     } else {
-      SDL_SetRenderDrawColor( _guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+      SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
       success = true;
     }
   }
-  return success;
+  return success && load_guy();
 }
 
 void window::close() {
-  SDL_DestroyTexture(_screen_texture);
   SDL_DestroyTexture(_guy_texture);
   SDL_DestroyRenderer(_guy_renderer);
-  // Deallocate guy
-  // SDL_FreeSurface(_guy_graphic);
-  //_guy_graphic = NULL;
-  // Destroy window
   SDL_DestroyWindow(_window);
-
   // Quit SDL subsystems
   SDL_Quit();
 }
 
 void window::handle_event() {
-  // guy my_guy = _gm.get_guy();
   switch (_event.type) {
     case SDL_QUIT:
       std::cerr << __func__ << " exit program" << std::endl;
@@ -71,16 +63,18 @@ void window::handle_event() {
     case SDL_KEYDOWN:
         switch (_event.key.keysym.sym) {
           case SDLK_LEFT:
-            _gm.set_x_velo(guy_movement::GOING_LEFT);
+            _gm.set_x_velo(guy_movement::GOING_LEFT*5);
             break;
           case SDLK_RIGHT:
-            _gm.set_x_velo(guy_movement::GOING_RIGHT);
+            std::cerr << "RIGHT ARROW DOWN\n";
+            _gm.set_x_velo(guy_movement::GOING_RIGHT*5);
             break;
           case SDLK_UP:
-            _gm.set_y_velo(guy_movement::GOING_UP);
+            std::cerr << "UP ARROW DOWN\n";
+            _gm.set_y_velo(guy_movement::GOING_UP*5);
             break;
           case SDLK_DOWN:
-            _gm.set_y_velo(guy_movement::GOING_DOWN);
+            _gm.set_y_velo(guy_movement::GOING_DOWN*5);
             break;
           default:
             break;
@@ -93,10 +87,12 @@ void window::handle_event() {
             _gm.set_x_velo(guy_movement::STILL);
           break;
         case SDLK_RIGHT:
+          std::cerr << "RIGHT ARROW UP\n";
           if (_gm.get_x_velo() > guy_movement::STILL)
             _gm.set_x_velo(guy_movement::STILL);
           break;
         case SDLK_UP:
+        std::cerr << "UP ARROW UP\n";
           if (_gm.get_y_velo() < guy_movement::STILL)
             _gm.set_y_velo(guy_movement::STILL);
           break;
@@ -107,11 +103,9 @@ void window::handle_event() {
         default:
           break;
       }
+      std::cout << "x_velo: " << _gm.get_x_velo() << " y_velo: " << _gm.get_y_velo()<< "\n";
       break;
   }
-  // std::cout << "x_velo: " << _gm.get_x_velo() << " y_velo: " << _gm.get_y_velo()<< "\n";
-  /* Update player position */
-  _gm.update_pos();
 }
 
 bool window::load_guy() {
@@ -119,11 +113,12 @@ bool window::load_guy() {
   SDL_Surface* _guy_graphic = SDL_LoadBMP("graphics/guy_right.bmp");
   if (_guy_graphic == NULL) {
     std::cerr << "Unable to load image SDL_image Error \n";
+    return false;
   } else {
-    // _screen_texture = SDL_CreateTexture(_guy_renderer, _guy_graphic);
     newTexture = SDL_CreateTextureFromSurface(_guy_renderer, _guy_graphic);
     if(newTexture == NULL) {
       std::cerr << "Unable to create texture from %s! SDL Error: \n";
+      return false;
     } else {
       //Get image dimensions
       mWidth = _guy_graphic -> w;
@@ -132,66 +127,40 @@ bool window::load_guy() {
     SDL_FreeSurface(_guy_graphic);
   }
   _guy_texture = newTexture;
+  return true;
 }
 
-
-/*void::window::draw_guy() {
-  //Loading success flag
-bool success = true;
-  // Load splash image
-  if (_gm.set_x_velo() == guy_movement::GOING_LEFT) {
-
-  } else {
-
-  }
-
-  r.x = get_x_cord
-  r.y =rand()%500;
-
-  SDL_SetRenderTarget(renderer, texture);
-  SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
-  SDL_RenderClear(renderer);
-  SDL_RenderDrawRect(renderer,&r);
-  SDL_SetRenderDrawColor(renderer, 0xFF, 0x00, 0x00, 0x00);
-  SDL_RenderFillRect(renderer, &r);
-  SDL_SetRenderTarget(renderer, NULL);
-  SDL_RenderCopy(renderer, texture, NULL, NULL);
-  SDL_RenderPresent(renderer);
-
-
-  return success;
-}*/
-
+void window::clear_screen() {
+  // Clear screen
+  SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_RenderClear(_guy_renderer);
+}
 void window::render() {
-  //Set rendering space and render to screen
-	SDL_Rect renderQuad = { _gm.get_x_cord(), _gm.get_y_cord(), mWidth, mHeight };
+  // Set rendering space and render to screen
+	SDL_Rect renderQuad = {_gm.get_x_cord(), _gm.get_y_cord(), mWidth, mHeight};
 
-	//Set clip rendering dimensions
-	/*if( clip != NULL )
-	{
-		renderQuad.w = clip->w;
-		renderQuad.h = clip->h;
-	}*/
-
-	//Render to screen
-	SDL_RenderCopyEx(_guy_renderer, _guy_texture, NULL, &renderQuad, 0.0, NULL, SDL_FLIP_NONE );
+	// Render to screen
+	SDL_RenderCopyEx(_guy_renderer, _guy_texture, NULL, &renderQuad, 0.0, NULL,
+                   SDL_FLIP_NONE);
+  SDL_RenderPresent(_guy_renderer);
 }
 
 void window::loop() {
+  const int update_freq_ms = 1;
+  const Uint8 *keystate;
+  int ret;
   while (!_quit) {
-    while (SDL_PollEvent(&_event) != 0) {
+    ret = SDL_WaitEventTimeout(&_event, update_freq_ms);
+    if (ret != 0) {
       handle_event();
     }
 
-    //_gm.report_pos();
-
-    //Clear screen
-    SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(_guy_renderer);
-
-    render();
-
-    SDL_RenderPresent(_guy_renderer);
-    // SDL_Delay(1000);
+    keystate = SDL_GetKeyboardState(NULL);
+    if (keystate[SDL_SCANCODE_RIGHT] || keystate[SDL_SCANCODE_LEFT] ||
+        keystate[SDL_SCANCODE_DOWN] || keystate[SDL_SCANCODE_UP]) {
+      _gm.update_pos();
+      clear_screen();
+      render();
+    }
   }
 }
