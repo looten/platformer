@@ -19,15 +19,10 @@ class window {
    bool _quit;
    SDL_Window* _window;
    SDL_Renderer* _renderer;
-
-   int mWidth;
-   int mHeight;
-   SDL_Texture* _guy_texture;
    // Event handler
    SDL_Event _event;
 
    void handle_event();
-   bool load_guy();
    void render();
    void clear_screen();
 

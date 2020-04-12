@@ -4,7 +4,7 @@
 #include "guy_manager.hpp"
 //#include "guy.hpp"
 
-guy_manager::guy_manager(int x, int y) : guy(x,y) {
+guy_manager::guy_manager(int x, int y) : guy(x,y), guy_graphics() {
 
 }
 

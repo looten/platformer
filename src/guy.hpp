@@ -20,6 +20,8 @@ class guy {
  private:
     int _x_cord, _y_cord;
     int _x_velo, _y_velo;
+
+    //guy_graphics _guy_graphic;
 };
 
 #endif  // SRC_GUY_H_

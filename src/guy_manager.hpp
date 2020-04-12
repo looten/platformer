@@ -4,6 +4,7 @@
 #include <map>
 
 #include "guy.hpp"
+#include "guy_graphics.hpp"
 
 // #include "guy.hpp"
 
@@ -15,7 +16,7 @@ namespace guy_movement {
   const int GOING_DOWN = 1;
 };
 
-class guy_manager : public guy {
+class guy_manager : public guy, public guy_graphics {
  public:
     guy_manager(int x, int y);
     // virtual ~guy_manager() {}

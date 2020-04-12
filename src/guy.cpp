@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "guy_manager.hpp"
+#include "guy_graphics.hpp"
 #include "guy.hpp"
 
 guy::guy(int x_cord, int y_cord) : _x_cord(x_cord),

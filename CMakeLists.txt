@@ -38,7 +38,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 find_package(Catch2 REQUIRED)
 
-set(SRC_FILES "src/guy.cpp" "src/guy_manager.cpp")
+set(SRC_FILES "src/guy.cpp" "src/guy_manager.cpp" "src/guy_graphics.cpp")
 set(TEST_FILES "tests/catch_main.cpp" "tests/test_guy.cpp")
 
 set(WINDOW_FILES "src/window.cpp")
@@ -50,14 +50,15 @@ set(WINDOW_FILES "src/window.cpp")
 
 # Build catch2 test
 add_executable(test_guy ${SRC_FILES} ${TEST_FILES})
-target_link_libraries(test_guy Catch2::Catch2)
+target_link_libraries(test_guy Catch2::Catch2 ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # Build platformer
 add_executable(platformer "src/main.cpp" ${SRC_FILES} ${WINDOW_FILES})
 target_link_libraries(platformer ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # Build guy and guy manager
-add_executable(guy "src/guy_main.cpp" ${SRC_FILES} )
+#add_executable(guy "src/guy_main.cpp" ${SRC_FILES} )
+#target_link_libraries(guy ${SDL2_LIBRARIES} ${SDL2_IMAGE_LIBRARIES})
 
 # Will add targets for running tests, valgrind, etc.
 #option(PARSE_CATCH_TESTS_VERBOSE ON)
