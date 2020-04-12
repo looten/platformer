@@ -30,15 +30,15 @@ bool window::init() {
                               SDL_WINDOWPOS_UNDEFINED,
                               SCREEN_WIDTH, SCREEN_HEIGHT,
                               SDL_WINDOW_SHOWN);
-    _guy_renderer = SDL_CreateRenderer(_window,
+    _renderer = SDL_CreateRenderer(_window,
                                        -1,
                                        SDL_RENDERER_ACCELERATED |
                                        SDL_RENDERER_TARGETTEXTURE);
-    if (_window == NULL || _guy_renderer == NULL) {
+    if (_window == NULL || _renderer == NULL) {
       std::cerr << __func__ << "Window/rederer could not be created! SDL_Error:"
                 <<  SDL_GetError() << std::endl;
     } else {
-      SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+      SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 
       success = true;
     }
@@ -48,7 +48,7 @@ bool window::init() {
 
 void window::close() {
   SDL_DestroyTexture(_guy_texture);
-  SDL_DestroyRenderer(_guy_renderer);
+  SDL_DestroyRenderer(_renderer);
   SDL_DestroyWindow(_window);
   // Quit SDL subsystems
   SDL_Quit();
@@ -115,7 +115,7 @@ bool window::load_guy() {
     std::cerr << "Unable to load image SDL_image Error \n";
     return false;
   } else {
-    newTexture = SDL_CreateTextureFromSurface(_guy_renderer, _guy_graphic);
+    newTexture = SDL_CreateTextureFromSurface(_renderer, _guy_graphic);
     if(newTexture == NULL) {
       std::cerr << "Unable to create texture from %s! SDL Error: \n";
       return false;
@@ -132,17 +132,17 @@ bool window::load_guy() {
 
 void window::clear_screen() {
   // Clear screen
-  SDL_SetRenderDrawColor(_guy_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-  SDL_RenderClear(_guy_renderer);
+  SDL_SetRenderDrawColor(_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+  SDL_RenderClear(_renderer);
 }
 void window::render() {
   // Set rendering space and render to screen
 	SDL_Rect renderQuad = {_gm.get_x_cord(), _gm.get_y_cord(), mWidth, mHeight};
 
 	// Render to screen
-	SDL_RenderCopyEx(_guy_renderer, _guy_texture, NULL, &renderQuad, 0.0, NULL,
+	SDL_RenderCopyEx(_renderer, _guy_texture, NULL, &renderQuad, 0.0, NULL,
                    SDL_FLIP_NONE);
-  SDL_RenderPresent(_guy_renderer);
+  SDL_RenderPresent(_renderer);
 }
 
 void window::loop() {

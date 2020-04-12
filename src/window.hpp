@@ -17,10 +17,11 @@ class window {
 
  private:
    bool _quit;
+   SDL_Window* _window;
+   SDL_Renderer* _renderer;
+
    int mWidth;
    int mHeight;
-   SDL_Window* _window;
-   SDL_Renderer* _guy_renderer;
    SDL_Texture* _guy_texture;
    // Event handler
    SDL_Event _event;
